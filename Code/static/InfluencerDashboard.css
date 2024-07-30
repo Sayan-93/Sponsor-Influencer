@@ -1,0 +1,22 @@
+.profile-table{
+    margin-left: 30%;
+    margin-right: 30%;
+    
+}
+
+.my-profile-text{
+    display: flex;
+    justify-content: center;
+}
+
+.edit-profile-button{
+    --bs-btn-padding-y: .25rem;
+    --bs-btn-padding-x: .5rem;
+    --bs-btn-font-size: .75rem;
+    margin-right: 30%;
+}
+
+.edit-profile-div{
+    display: flex;
+    justify-content: right;
+}

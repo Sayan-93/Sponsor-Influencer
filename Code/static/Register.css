@@ -1,0 +1,18 @@
+.outer-block{
+    width:auto;
+    border:1px solid black;
+    margin: 140px 180px 60px 180px;
+}
+
+.inner-block{
+    width: auto;
+    padding: 20px;
+}
+
+.nav{
+    display: flex;
+}
+
+.login-register{
+    margin-left: 80%;
+}

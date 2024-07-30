@@ -1,0 +1,22 @@
+.new-campaign-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.form-div{
+    justify-content: center; 
+}
+
+.card-width{
+    justify-content: center;
+    align-items: center;
+}
+
