@@ -105,9 +105,9 @@ def influencer_search_campaign():
             campaign_list = Campaign.query.all()
         else:
             campaign_list = Campaign.query.filter_by(industry=search_term).all()
-            print(campaign_list[0].private,campaign_list[1].private)
+            
         sponsor_list = Sponsor.query.all()
-        print(sponsor_list)
+        
         return render_template('InfluencerSearchCampaign.html',campaign_list=campaign_list,sponsor_list=sponsor_list)
             
 
