@@ -343,12 +343,39 @@ def add_ad_request():
 def update_ad_request():
     message = request.form.get('message')
 
-    if message == "unsend request":
+    if message == "unsend request" or message == "deleted":
         ad_request_id = request.form.get('ad-request-id')
 
         ad_request = Ad_requests.query.get(ad_request_id)
 
         db.session.delete(ad_request)
+
+        db.session.commit()
+
+    elif message == "request accepted":
+        ad_request_id = request.form.get('ad-request-id')
+
+        ad_request = Ad_requests.query.get(ad_request_id)
+
+        ad_request.request_status = "accepted"
+
+        db.session.commit()
+
+    elif message == "request rejected":
+        ad_request_id = request.form.get('ad-request-id')
+
+        ad_request = Ad_requests.query.get(ad_request_id)
+
+        ad_request.request_status = "rejected"
+
+        db.session.commit()
+
+    elif message == "dashboard":
+        ad_request_id = request.form.get('ad-request-id')
+
+        ad_request = Ad_requests.query.get(ad_request_id)
+
+        ad_request.request_status = "dashboard"
 
         db.session.commit()
 
