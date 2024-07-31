@@ -12,7 +12,8 @@
 </head>
 <body>
                 <!-- Navbar -->
-                 
+         {% if user_type == 'sponsor' %}
+                
     <div class="bg-body-tertiary navbar-div">
       
         <ul class="nav justify-content-center">
@@ -23,7 +24,7 @@
             <a class="nav-link" href="/sponsor-search">Search influencers</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="sponsor_ad_request_page">Ad requests</a>
+            <a class="nav-link" href="/sponsor_ad_request_page">Ad requests</a>
           </li>
           <li>
             <form class="logout" action="/logout" method="post">
@@ -32,7 +33,29 @@
           </li>
         </ul>
     </div>
+            {% endif %}
 
+        {% if user_type == 'influencer' %}
+            <div class="bg-body-tertiary navbar-div">
+        
+                <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/influencer-page">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/influencer-search-campaign">Search campaigns</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/influencer_ad_request">Ad requests</a>
+                </li>
+                <li>
+                    <form class="logout" action="/logout" method="post">
+                        <button class="btn btn-dark">Logout</button>
+                    </form>
+                </li>
+                </ul>
+            </div>
+        {% endif %}
 
 
     <!-- Ad request handler for sponsors -->
@@ -80,6 +103,12 @@
 
                     {% elif ad_request.request_type == 'S' and ad_request.request_status == 'rejected' %}
 
+                    {% elif ad_request.request_type == 'I' and ad_request.request_status == 'pending' %}
+
+                    {% elif ad_request.request_type == 'I' and ad_request.request_status == 'accepted' %}
+
+                    {% elif ad_request.request_type == 'I' and ad_request.request_status == 'rejected' %}
+
                     {% endif %}
 
                 {% endif %}
@@ -88,7 +117,7 @@
 
         {% endfor %}
 
-
+    </table>
 
     <!-- Ad request handler for influencers -->
 
@@ -96,19 +125,55 @@
 
         <h3>Ad requests</h3>
 
+        
+
         &nbsp;&nbsp;
+
+        <table class="table">
+            <tbody>
 
         {% for campaign in campaign_list %}
 
             {% for ad_request in ad_request_list %}
 
-                {% if campaign.id == ad_request_list.campaign_id %}
+                {% if campaign.id == ad_request.campaign_id %}
 
                     {% if ad_request.request_type == 'S' and ad_request.request_status == 'pending' %}
 
                     {% elif ad_request.request_type == 'S' and ad_request.request_status == 'accepted' %}
 
                     {% elif ad_request.request_type == 'S' and ad_request.request_status == 'rejected' %}
+
+                    {% elif ad_request.request_type == 'I' and ad_request.request_status == 'pending' %}
+                            <tr>
+                                <div class="row cards">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <div class="card text-bg-light mb-3">
+
+                                        <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                        <div class="card-body">
+                                            
+                                            <p class="card-text">{{campaign.description}}</p>
+                                            <p class="card-text">Industry: {{campaign.industry}}</p>
+                                            <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                            <h4 class="card-text">Payment amount: {{campaign.budget}}</h4>
+                                            &nbsp;
+                                            <div>
+                                                <button type="submit" class="btn btn-primary">Unsend request</button>
+                                                &nbsp;&nbsp;
+                                                Ad request sent to {{ad_request.sponsor_name}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </tr>
+
+
+                    {% elif ad_request.request_type == 'I' and ad_request.request_status == 'accepted' %}
+
+                    {% elif ad_request.request_type == 'I' and ad_request.request_status == 'rejected' %}
 
                     {% endif %}
 
@@ -119,7 +184,7 @@
         {% endfor %}
 
     {% endif %}
-
+        </tbody>
     </table>
 </body>
 </html>

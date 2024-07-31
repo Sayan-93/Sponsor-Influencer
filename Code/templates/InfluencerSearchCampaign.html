@@ -20,10 +20,10 @@
             <a class="nav-link active" aria-current="page" href="/influencer-page">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Search campaigns</a>
+            <a class="nav-link" href="/influencer-search-campaign">Search campaigns</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Ad requests</a>
+            <a class="nav-link" href="/influencer_ad_request">Ad requests</a>
           </li>
           <li>
             <form class="logout" action="/logout" method="post">
@@ -57,30 +57,35 @@
         <tbody>
             {% for campaign in campaign_list %}
                 {% if campaign.private == None and campaign.flag == None %}
-                    {% for sponsor in sponsor_list %}
-                        {% if campaign.sponsor_id == sponsor.id %}
-            <tr>
-              <form action="">
-                <div class="row card-width">
-                    <div class="col-sm-6 mb-3 mb-sm-0">
-                      <div class="card text-bg-light mb-3">
-                        <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
-                        <div class="card-body">
-                            <p class="card-title">Created by: {{sponsor.name}}</p>
-                          <p class="card-text">{{campaign.description}}</p>
-                          <p class="card-text">Industry: {{campaign.industry}}</p>
-                          <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
-                          <h5 class="card-text">Payment amount: {{campaign.budget}}</h5>
-                        
-                          <button class="btn btn-primary" data-val="{{campaign.id}}#{{campaign.title}}#{{campaign.description}}#{{campaign.industry}}#{{campaign.start_date}}#{{campaign.end_date}}#{{campaign.budget}}#{{campaign.private}}">Send ad request</button>
-                          
-                      </div>
-                    </div>
-                </div>
-                      
-              </tr>
-              {% endif %}
-              {% endfor %}
+                    
+                            
+                      <tr>
+                        <form action="/influencer-add-ad-request" method="post">
+                          <div class="row card-width">
+                              <div class="col-sm-6 mb-3 mb-sm-0">
+                                <div class="card text-bg-light mb-3">
+                                  <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+                                  <div class="card-body">
+                                    <p class="card-title">Created by: {{campaign.sponsor.name}}</p>
+                                    <p class="card-text">{{campaign.description}}</p>
+                                    <p class="card-text">Industry: {{campaign.industry}}</p>
+                                    <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                    <h5 class="card-text">Payment amount: {{campaign.budget}}</h5>
+                                  
+                                    <button class="btn btn-primary">Send ad request</button>
+                                    
+                                    <input type="text" name="sponsor-name" value="{{campaign.sponsor.name}}" hidden>
+                                    <input type="text" name="sponsor-id" value="{{campaign.sponsor.id}}" hidden>
+                                    <input type="text" name="campaign-id" value="{{campaign.id}}" hidden>
+                                    
+                  
+                                </div>
+                              </div>
+                          </div>
+                          </div>
+                          </form>   
+                        </tr>
+              
               {% endif %}
 
             {% endfor %}

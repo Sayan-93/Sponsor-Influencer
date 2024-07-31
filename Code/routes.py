@@ -103,18 +103,49 @@ def influencer_search_campaign():
         search_term = request.form.get('search-term')
         if search_term == '':
             campaign_list = Campaign.query.all()
+            print(campaign_list)
         else:
             campaign_list = Campaign.query.filter_by(industry=search_term).all()
             
-        sponsor_list = Sponsor.query.all()
         
-        return render_template('InfluencerSearchCampaign.html',campaign_list=campaign_list,sponsor_list=sponsor_list)
+        
+        return render_template('InfluencerSearchCampaign.html',campaign_list=campaign_list)
             
 
     return render_template('InfluencerSearchCampaign.html')
 
 
-@main.route('/influencer-add-ad-request')
+@main.route('/influencer-add-ad-request',methods=['POST'])
+def influencer_add_ad_request():
+    if request.method == 'POST':
+
+        sponsor_id = request.form.get('sponsor-id')
+        sponsor_name = request.form.get('sponsor-name')
+        campaign_id = request.form.get('campaign-id')
+        print(campaign_id)
+        influencer_id = session['influencer_id']
+        influencer_name = Influencer.query.get(influencer_id).name
+        request_type = 'I'
+        request_status = 'pending'
+
+        ad_request = Ad_requests(sponsor_id=sponsor_id,sponsor_name=sponsor_name,campaign_id=campaign_id,influencer_id=influencer_id,influencer_name=influencer_name,request_type=request_type,request_status=request_status)
+
+        db.session.add(ad_request)
+        db.session.commit()
+
+        return redirect(url_for('main.influencer_ad_request'))
+
+@main.route('/update_influencer_ad_request')
+
+
+@main.route('/influencer_ad_request',methods=['GET'])
+def influencer_ad_request():
+
+    ad_request_list = Ad_requests.query.filter_by(influencer_id=session['influencer_id']).all()
+
+    campaign_list = Campaign.query.all()
+
+    return render_template('Ad_request.html',ad_request_list=ad_request_list,campaign_list=campaign_list,user_type=session['user_type'])
 
 ################################ Influencer routes end ###################################
 
@@ -301,7 +332,7 @@ def sponsor_ad_request_page():
 
     campaign_list = Campaign.query.filter_by(sponsor_id=session['sponsor_id']).all()
 
-    return render_template('SponsorAdRequest.html',ad_request_list=ad_request_list,campaign_list=campaign_list,user_type=session['user_type'])
+    return render_template('Ad_Request.html',ad_request_list=ad_request_list,campaign_list=campaign_list,user_type=session['user_type'])
     
 ########################### sponsor routes end ################################
  
