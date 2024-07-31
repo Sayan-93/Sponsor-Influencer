@@ -106,10 +106,27 @@ def influencer_search_campaign():
             print(campaign_list)
         else:
             campaign_list = Campaign.query.filter_by(industry=search_term).all()
+
+        new_campaign_list = []
             
+        ad_request_list = Ad_requests.query.filter_by(influencer_id=session['influencer_id']).all()
+
+        if len(ad_request_list) == 0:
+            for campaign in campaign_list:
+                new_campaign_list.append(campaign)
+        else:
+            for campaign in campaign_list:
+                match = False
+                for ad_request in ad_request_list:
+                    if campaign.id == ad_request.campaign_id:
+                        match = True
+
+                if match == False:
+                    new_campaign_list.append(campaign)
+
         
         
-        return render_template('InfluencerSearchCampaign.html',campaign_list=campaign_list)
+        return render_template('InfluencerSearchCampaign.html',new_campaign_list=new_campaign_list)
             
 
     return render_template('InfluencerSearchCampaign.html')
@@ -322,7 +339,20 @@ def add_ad_request():
     return redirect(url_for('main.sponsor_ad_request_page'))
 
 
-@main.route('/update_ad_request',methods=['GET','POST'])                    # sponsor takes action on sent request
+@main.route('/update_ad_request',methods=['GET','POST'])                  # sponsor takes action on sent request
+def update_ad_request():
+    message = request.form.get('message')
+
+    if message == "unsend request":
+        ad_request_id = request.form.get('ad-request-id')
+
+        ad_request = Ad_requests.query.get(ad_request_id)
+
+        db.session.delete(ad_request)
+
+        db.session.commit()
+
+    return redirect(url_for('main.sponsor_ad_request_page'))
 
 
 @main.route('/sponsor_ad_request_page',methods=['GET','POST'])              # sponsor ad request page render

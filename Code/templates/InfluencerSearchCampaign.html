@@ -37,7 +37,7 @@
       <!-- Search box for influencer -->
 
       <div class="search">
-        <div>Search influencers</div>
+        <div>Search campaigns</div>
       
         
 
@@ -52,10 +52,10 @@
             <!-- Campaign generation -->
     <h3>Active Campaigns:</h3>
 
-    {% if campaign_list %}
+    {% if new_campaign_list %}
         <table class="table">
         <tbody>
-            {% for campaign in campaign_list %}
+            {% for campaign in new_campaign_list %}
                 {% if campaign.private == None and campaign.flag == None %}
                     
                             
