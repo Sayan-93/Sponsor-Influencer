@@ -102,14 +102,19 @@ def influencer_search_campaign():
     if request.method == 'POST':
         search_term = request.form.get('search-term')
         if search_term == '':
-            campaign_list = Campaign.query.filter_by(id).all()
+            campaign_list = Campaign.query.all()
         else:
-            campaign_list = Campaign.query.filter_by(search_term).all()
+            campaign_list = Campaign.query.filter_by(industry=search_term).all()
+            print(campaign_list[0].private,campaign_list[1].private)
+        sponsor_list = Sponsor.query.all()
+        print(sponsor_list)
+        return render_template('InfluencerSearchCampaign.html',campaign_list=campaign_list,sponsor_list=sponsor_list)
+            
 
     return render_template('InfluencerSearchCampaign.html')
 
 
-@main.route('/influencer-send-request')
+@main.route('/influencer-add-ad-request')
 
 ################################ Influencer routes end ###################################
 
