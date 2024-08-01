@@ -80,7 +80,7 @@
                 {% if campaign.id == ad_request.campaign_id %}
 
                     {% if ad_request.request_type == 'S' and ad_request.request_status == 'pending' %}
-                        <form action="/update_ad_request" method="post">    
+                        <form action="/update_sponsor_ad_request" method="post">    
                             <tr>
                                 <div class="row cards">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
@@ -129,8 +129,8 @@
                                         &nbsp;&nbsp;
 
                                     <div class="accept-reject-buttons">    
-                                        <form action="/update_ad_request" method="post">
-                                            <button type="submit" class="btn btn-primary">&lt;Send to dashboard</button>
+                                        <form action="/update_sponsor_ad_request" method="post">
+                                            <button type="submit" class="btn btn-primary">&lt;-- Send to dashboard</button>
                                             <input type="text" name="message" value="dashboard" hidden>
                                             <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
                                         </form>
@@ -146,7 +146,7 @@
 
                     {% elif ad_request.request_type == 'S' and ad_request.request_status == 'rejected' %}
 
-                        <form action="/update_ad_request" method="post">    
+                        <form action="/update_sponsor_ad_request" method="post">    
                             <tr>
                                 <div class="row cards">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
@@ -199,7 +199,7 @@
                                             &nbsp;&nbsp;
 
                                         <div class="accept-reject-buttons">    
-                                            <form action="/update_ad_request" method="post">
+                                            <form action="/update_sponsor_ad_request" method="post">
                                                 <button type="submit" class="btn btn-primary">Accept request</button>
                                                 <input type="text" name="message" value="request accepted" hidden>
                                                 <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
@@ -207,7 +207,7 @@
                                         
                                             &nbsp;&nbsp;
 
-                                            <form action="/update_ad_request" method="post">
+                                            <form action="/update_sponsor_ad_request" method="post">
                                             <button type="submit" class="btn btn-primary">Reject request</button>
                                             <input type="text" name="message" value="request rejected" hidden>
                                             <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
@@ -242,7 +242,7 @@
                                         &nbsp;&nbsp;
 
                                     <div class="accept-reject-buttons">    
-                                        <form action="/update_ad_request" method="post">
+                                        <form action="/update_sponsor_ad_request" method="post">
                                             <button type="submit" class="btn btn-primary">&lt;-- Send to dashboard</button>
                                             <input type="text" name="message" value="dashboard" hidden>
                                             <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
@@ -278,7 +278,7 @@
                                         &nbsp;&nbsp;
 
                                     <div class="accept-reject-buttons">    
-                                        <form action="/update_ad_request" method="post">
+                                        <form action="/update_sponsor_ad_request" method="post">
                                             <button type="submit" class="btn btn-primary">Delete</button>
                                             <input type="text" name="message" value="deleted" hidden>
                                             <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
@@ -324,11 +324,99 @@
 
                     {% if ad_request.request_type == 'S' and ad_request.request_status == 'pending' %}
 
+                            <tr>
+                                <div class="row cards">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <div class="card text-bg-light mb-3">
+
+                                        <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                        <div class="card-body">
+                                            
+                                            <p class="card-text">Ad request from <strong>{{ad_request.sponsor_name}}</strong></p>
+                                            <p class="card-text">{{campaign.description}}</p>
+                                            <p class="card-text">Industry: {{campaign.industry}}</p>
+                                            <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                            <h4 class="card-text">Payment amount: {{campaign.budget}}</h4>
+                                            &nbsp;
+                                            <div class="accept-reject-buttons">
+                                                <form action="/update_influencer_ad_request" method="post">
+                                                    <button type="submit" class="btn btn-primary">Accept</button>
+                                                    <input type="text" name="message" value="request accepted" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                </form>
+                                                &nbsp;&nbsp;
+                                                <form action="/update_influencer_ad_request" method="post">
+                                                    <button type="submit" class="btn btn-primary">Reject</button>
+                                                    <input type="text" name="message" value="request rejected" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </tr>
+
+
                     {% elif ad_request.request_type == 'S' and ad_request.request_status == 'accepted' %}
+
+                            <tr>
+                                <div class="row cards">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <div class="card text-bg-light mb-3">
+
+                                        <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                        <div class="card-body">
+                                            
+                                            <p class="card-text">You accepted <strong>{{ad_request.sponsor_name}}</strong>'s ad request</p>
+                                            <p class="card-text">{{campaign.description}}</p>
+                                            <p class="card-text">Industry: {{campaign.industry}}</p>
+                                            <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                            <h4 class="card-text">Payment amount: {{campaign.budget}}</h4>
+                                            &nbsp;
+                                            <div>
+                                                <form action="/update_influencer_ad_request" method="post">
+                                                    <button type="submit" class="btn btn-primary"><-- Send to dashboard</button>
+                                                    <input type="text" name="message" value="dashboard" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                </form>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </tr>
 
                     {% elif ad_request.request_type == 'S' and ad_request.request_status == 'rejected' %}
 
+                            <tr>
+                                <div class="row cards">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <div class="card text-bg-light mb-3">
+
+                                        <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                        <div class="card-body">
+                                            
+                                            
+                                            <p class="card-text">{{campaign.description}}</p>
+                                            <p class="card-text">Industry: {{campaign.industry}}</p>
+                                            <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                            <h4 class="card-text">Payment amount: {{campaign.budget}}</h4>
+                                            &nbsp;
+                                            <p class="card-text">You rejected <strong>{{ad_request.sponsor_name}}</strong>'s request</p>
+                                            
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </tr>
+
                     {% elif ad_request.request_type == 'I' and ad_request.request_status == 'pending' %}
+                        <form class="/update_influencer_ad_request" action="post">    
                             <tr>
                                 <div class="row cards">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
@@ -345,6 +433,8 @@
                                             &nbsp;
                                             <div>
                                                 <button type="submit" class="btn btn-primary">Unsend request</button>
+                                                <input type="text" name="message" value="unsend request" hidden>
+                                                <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
                                                 &nbsp;&nbsp;
                                                 Ad request sent to {{ad_request.sponsor_name}}
                                             </div>
@@ -353,11 +443,65 @@
                                     </div>
                                 </div>
                             </tr>
-
+                        </form>
 
                     {% elif ad_request.request_type == 'I' and ad_request.request_status == 'accepted' %}
+                        
+                            <tr>
+                                <div class="row cards">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <div class="card text-bg-light mb-3">
+
+                                        <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                        <div class="card-body">
+                                            
+                                            
+                                            <p class="card-text">{{campaign.description}}</p>
+                                            <p class="card-text">Industry: {{campaign.industry}}</p>
+                                            <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                            <h4 class="card-text">Payment amount: {{campaign.budget}}</h4>
+                                            &nbsp;
+                                            <p class="card-text"><p class="card-text">Your request has been accepted by <strong>{{ad_request.sponsor_name}}</strong></p></p>
+                                            <div>
+                                                <form action="/update_ad_request" method="post">
+                                                    <button type="submit" class="btn btn-primary">&nbsp;-- Send to dahsboard</button>
+                                                    <input type="text" name="message" value="dashboard" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                </form>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </tr>
 
                     {% elif ad_request.request_type == 'I' and ad_request.request_status == 'rejected' %}
+                
+                            <tr>
+                                <div class="row cards">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <div class="card text-bg-light mb-3">
+
+                                        <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                        <div class="card-body">
+                                            
+                                            
+                                            <p class="card-text">{{campaign.description}}</p>
+                                            <p class="card-text">Industry: {{campaign.industry}}</p>
+                                            <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                            <h4 class="card-text">Payment amount: {{campaign.budget}}</h4>
+                                            &nbsp;
+                                            <p class="card-text">><strong>{{ad_request.sponsor_name}}</strong> has rejected your request.</p>
+                                            
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </tr>
+
 
                     {% endif %}
 
