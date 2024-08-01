@@ -161,8 +161,9 @@
                                             <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
                                         
                                             <div>
+                                                <div class="rejected-text">
                                                 Your ad request has been <strong>rejected</strong> by {{ad_request.influencer_name}}
-
+                                                </div>
                                                 &nbsp;&nbsp;
 
                                                 <button type="submit" class="btn btn-primary">Delete request</button>
@@ -273,7 +274,9 @@
                                     <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
                                 
                                     
-                                    <div>You rejected <strong>{{ad_request.influencer_name}}</strong>'s offer</div>
+                                    <div class="rejected-text">
+                                        You rejected <strong>{{ad_request.influencer_name}}</strong>'s offer
+                                    </div>
 
                                         &nbsp;&nbsp;
 
@@ -292,6 +295,7 @@
                             </div>
                         </div>
                     </tr>
+
 
                     {% endif %}
 
@@ -378,7 +382,7 @@
                                             &nbsp;
                                             <div>
                                                 <form action="/update_influencer_ad_request" method="post">
-                                                    <button type="submit" class="btn btn-primary"><-- Send to dashboard</button>
+                                                    <button type="submit" class="btn btn-primary">&lt;-- Send to dashboard</button>
                                                     <input type="text" name="message" value="dashboard" hidden>
                                                     <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
                                                 </form>
@@ -407,7 +411,7 @@
                                             <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
                                             <h4 class="card-text">Payment amount: {{campaign.budget}}</h4>
                                             &nbsp;
-                                            <p class="card-text">You rejected <strong>{{ad_request.sponsor_name}}</strong>'s request</p>
+                                            <p class="card-text rejected-text">You rejected <strong>{{ad_request.sponsor_name}}</strong>'s request</p>
                                             
                                         </div>
                                     </div>
@@ -464,7 +468,7 @@
                                             &nbsp;
                                             <p class="card-text"><p class="card-text">Your request has been accepted by <strong>{{ad_request.sponsor_name}}</strong></p></p>
                                             <div>
-                                                <form action="/update_ad_request" method="post">
+                                                <form action="/update_influencer_ad_request" method="post">
                                                     <button type="submit" class="btn btn-primary">&nbsp;-- Send to dahsboard</button>
                                                     <input type="text" name="message" value="dashboard" hidden>
                                                     <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
@@ -494,7 +498,7 @@
                                             <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
                                             <h4 class="card-text">Payment amount: {{campaign.budget}}</h4>
                                             &nbsp;
-                                            <p class="card-text">><strong>{{ad_request.sponsor_name}}</strong> has rejected your request.</p>
+                                            <p class="card-text rejected-text">><strong>{{ad_request.sponsor_name}}</strong> has rejected your request.</p>
                                             
                                         </div>
                                     </div>

@@ -2,6 +2,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.my-campaign-button{
+    margin-bottom: 2%;
+}
+
+.current-ongoing-campaign{
+    margin-bottom: 2%;
 }
 
 .navbar-div{
@@ -18,5 +28,15 @@
 .card-width{
     justify-content: center;
     align-items: center;
+}
+
+.dashboarded-cards{
+    display: flex;
+    justify-content: center;
+}
+
+.campaign-in-progress-text{
+    color: green;
+    margin-bottom: 1.5%;
 }
 

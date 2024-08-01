@@ -2,7 +2,7 @@ from flask import render_template,Blueprint,request,session,redirect,url_for
 from app import app
 from db.models import *
 from markupsafe import escape 
-from sqlalchemy.orm import DeclarativeBase,Mapped,mapped_column
+from sqlalchemy import or_,and_
 from datetime import datetime
 
 main = Blueprint('main',__name__)
@@ -77,7 +77,20 @@ def influencer_page():
     if session['influencer_id']:
         influencer = Influencer.query.filter_by(id=session['influencer_id']).first()
 
-        return render_template('InfluencerDashboard.html',influencer=influencer)
+        dashboarded_ad_request_list = Ad_requests.query.filter_by(influencer_id=session['influencer_id'],request_status='dashboard').all()
+        
+        completed_ad_request_list = Ad_requests.query.filter_by(influencer_id=session['influencer_id'],request_status='completed').all()
+
+        overall_ad_request_list = dashboarded_ad_request_list + completed_ad_request_list
+
+        overall_campaign_list = []
+
+        for ad_request in overall_ad_request_list:
+            campaign = Campaign.query.get(ad_request.campaign_id)
+
+            overall_campaign_list.append(campaign)
+
+        return render_template('InfluencerDashboard.html',influencer=influencer,overall_ad_request_list=overall_ad_request_list,overall_campaign_list=overall_campaign_list)
     
 
 @main.route('/edit-influencer-profile',methods=['POST'])
@@ -192,6 +205,17 @@ def update_influencer_ad_request():
 
         db.session.commit()
 
+    elif message == "completed":
+        ad_request_id = request.form.get('ad-request-id')
+
+        ad_request = Ad_requests.query.get(ad_request_id)
+
+        ad_request.request_status = "completed"
+
+        db.session.commit()
+
+        return redirect(url_for('main.influencer_page'))
+
     return redirect(url_for('main.influencer_ad_request'))
 
 
@@ -238,7 +262,14 @@ def sponsorLogin():
 def sponsor_page():
     if session['sponsor_id']:
         campaign_list = Campaign.query.filter_by(sponsor_id=session['sponsor_id'])
-        return render_template('SponsorDashboard.html',campaign_list=campaign_list,sponsor_id=session['sponsor_id'])
+
+        dashboarded_ad_request_list = Ad_requests.query.filter_by(sponsor_id=session['sponsor_id'],request_status='dashboard').all()
+
+        completed_ad_request_list = Ad_requests.query.filter_by(sponsor_id=session['sponsor_id'],request_status='completed').all()
+
+        overall_ad_request_list = dashboarded_ad_request_list + completed_ad_request_list
+        
+        return render_template('SponsorDashboard.html',campaign_list=campaign_list,sponsor_id=session['sponsor_id'],overall_ad_request_list=overall_ad_request_list)
     
     return redirect(url_for('sponsorLogin'))
 
@@ -418,6 +449,17 @@ def update_ad_request():
         ad_request.request_status = "dashboard"
 
         db.session.commit()
+
+    elif message == 'delete':
+        ad_request_id = request.form.get('ad-request-id')
+
+        ad_request = Ad_requests.query.get(ad_request_id)
+
+        db.session.delete(ad_request)
+
+        db.session.commit()
+
+        return redirect(url_for('main.sponsor_page'))
 
     return redirect(url_for('main.sponsor_ad_request_page'))
 

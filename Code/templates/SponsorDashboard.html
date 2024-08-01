@@ -40,7 +40,7 @@
     
   
 
-    Sponsor dashboard!
+    
 
         <!-- New Campaign Button-->
     <div class="new-campaign-button">
@@ -106,7 +106,7 @@
 
 
 <!-- Campaign table starts generating -->
-<h3>My Campaigns:</h3>
+<div class="my-campaign-button"><h3>&nbsp;&nbsp;My Campaigns:</h3></div>
 
 {% if campaign_list %}
 
@@ -250,16 +250,105 @@
 
             {% endfor %}
         </tbody>
-    
+        </table>
 
-</table>
+        {% else %}
+
+        <p>You have no campaigns</p>
+        
+        {% endif %}
+        
+
+        <!-- dashboarded ad requests handler-->
 
 
-{% else %}
+        <div class="current-ongoing-campaign">
+          <h4>
+            &nbsp;&nbsp;Currently ongoing campaigns:
+          </h4>
+        </div>
 
-<p>You have no campaigns</p>
+        {% if overall_ad_request_list %}
 
-{% endif %}
+
+      <table class="table">
+        <tbody>
+            {% for ad_request in overall_ad_request_list %}
+
+            {% for campaign in campaign_list %}
+
+                {% if ad_request.request_status == 'dashboard' and campaign.id == ad_request.campaign_id  %}
+          
+
+                      <tr>
+                        <div class="row dashboarded-cards">
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                            <div class="card text-bg-light mb-3">
+
+                                <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                <div class="card-body">
+                                    
+                                    <p class="card-text">{{campaign.description}}</p>
+                                    <p class="card-text">Industry: {{campaign.industry}}</p>
+                                    <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                
+                                    <div class="campaign-in-progress-text"><p class="card-text">Campaign in progress by <strong>{{ad_request.influencer_name}}</strong></p></div>
+                                    
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </tr>
+
+                {% elif ad_request.request_status == 'completed' and campaign.id == ad_request.campaign_id %}
+                    
+                
+          
+
+                      <tr>
+                        <div class="row dashboarded-cards">
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                            <div class="card text-bg-light mb-3">
+
+                                <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                <div class="card-body">
+                                    
+                                    <p class="card-text">{{campaign.description}}</p>
+                                    <p class="card-text">Industry: {{campaign.industry}}</p>
+                                    <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                
+                                    <div class="campaign-in-progress-text">
+                                      <p class="card-text">Campaign completed by <strong>{{ad_request.influencer_name}}</strong></p>
+                                    </div>
+                                    
+                                    <form action="/update_sponsor_ad_request" method="post">
+                                      <button type="submit" class="btn btn-primary">Delete</button>
+                                      <input type="text" name="message" value="delete" hidden>
+                                      <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                    </form>
+
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </tr>
+                    
+            {% endif %}
+        {% endfor %}
+
+      {% endfor %}
+        </tbody>
+      </table>
+
+      {% else %}
+
+      <div><h5>&nbsp;&nbsp;You have no ongoing campaigns</h5></div>
+
+      {% endif %}
+
+
 
 
 

@@ -6,3 +6,7 @@
 .accept-reject-buttons{
     display: flex;
 }
+
+.rejected-text{
+    color: #aa0000;
+}

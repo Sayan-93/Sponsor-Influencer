@@ -1,11 +1,17 @@
+.blocks{
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+}
+
 .outer-block{
-    width:auto;
+    width:30%;
     border:1px solid black;
     margin: 140px 180px 60px 180px;
 }
 
 .inner-block{
-    width: auto;
+    width: 100%;
     padding: 20px;
 }
 

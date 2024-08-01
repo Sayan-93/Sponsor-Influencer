@@ -121,5 +121,91 @@
       
     })
   </script>
+
+  &nbsp;&nbsp;
+
+  
+  <table class="table">
+
+    <tbody>
+      <div class="current-campaign-text">
+      <h4>Current campaigns:</h4>
+      </div>
+
+      {% for ad_request in overall_ad_request_list %}
+
+          {% for campaign in overall_campaign_list %}
+
+              {% if ad_request.request_status == 'dashboard' and campaign.id == ad_request.campaign_id %}
+        
+                <div class="">
+                    <tr>
+                      <div class="row dashboard_table">
+                          <div class="col-sm-6 mb-3 mb-sm-0">
+                          <div class="card text-bg-light mb-3">
+
+                              <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                              <div class="card-body">
+                                  <p class="card-text">Created by:&nbsp; <strong>{{ad_request.sponsor_name}}</strong></p>
+                                  
+                                  <p class="card-text">{{campaign.description}}</p>
+                                  <p class="card-text">Industry: {{campaign.industry}}</p>
+                                  <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                              
+                                  
+                                  <div class="accept-reject-buttons">    
+                                      <form action="/update_influencer_ad_request" method="post">
+                                          <button type="submit" class="btn btn-primary">Mark as complete</button>
+                                          <input type="text" name="message" value="completed" hidden>
+                                          <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                      </form>
+                                  
+                                      &nbsp;&nbsp;
+                                  </div>    
+
+                              </div>
+                          </div>
+                          </div>
+                      </div>
+                    </tr>
+                </div>
+
+              {% elif ad_request.request_status == 'completed' and campaign.id == ad_request.campaign_id %}
+
+              <div class="">
+                <tr>
+                  <div class="row dashboard_table">
+                      <div class="col-sm-6 mb-3 mb-sm-0">
+                      <div class="card text-bg-light mb-3">
+
+                          <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                          <div class="card-body">
+                              <p class="card-text">Created by:&nbsp; <strong>{{ad_request.sponsor_name}}</strong></p>
+                              
+                              <p class="card-text">{{campaign.description}}</p>
+                              <p class="card-text">Industry: {{campaign.industry}}</p>
+                              <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                          
+                              <div class="complete-campaign-message">
+                                <p><strong>Congrats, you completed this campaign!</strong></p>
+                              </div>
+                          </div>
+                      </div>
+                      </div>
+                  </div>
+                </tr>
+            </div>
+                
+          {% endif %}
+      {% endfor %}
+
+    {% endfor %}
+
+    </tbody>
+
+  </table>
+  
 </body>
 </html>
