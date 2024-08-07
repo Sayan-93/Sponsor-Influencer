@@ -17,12 +17,14 @@ class Influencer(db.Model):
     password: Mapped[str]
     industry: Mapped[str] = mapped_column(nullable=True)
     followers: Mapped[int] = mapped_column(nullable=True)
+    flag: Mapped[str] = mapped_column(nullable=True)
 
 class Sponsor(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
     campaign: Mapped[List['Campaign']] = relationship(back_populates='sponsor')
+    flag: Mapped[str] = mapped_column(nullable=True)
 
 class Admin(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -38,7 +40,7 @@ class Campaign(db.Model):
     end_date: Mapped[datetime]
     budget: Mapped[int]
     private: Mapped[str] = mapped_column(nullable=True)
-    flag: Mapped[bool] = mapped_column(nullable=True)
+    flag: Mapped[str] = mapped_column(nullable=True)
     sponsor_id = mapped_column(ForeignKey('sponsor.id'))
     sponsor: Mapped['Sponsor'] = relationship(back_populates='campaign')
 
@@ -51,5 +53,9 @@ class Ad_requests(db.Model):
     influencer_name: Mapped[str] = mapped_column(ForeignKey('influencer.name'))
     request_type: Mapped[str]
     request_status: Mapped[str]
+    Negotiation_type: Mapped[str] = mapped_column(nullable=True)
+    Negotiation_payment_amount: Mapped[int] = mapped_column(nullable=True)
+    Negotiation_message: Mapped[str] = mapped_column(nullable=True)
+    flag: Mapped[str] = mapped_column(nullable=True)
 
 

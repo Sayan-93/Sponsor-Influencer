@@ -31,7 +31,12 @@
                               <input type="text" name="influencer-id" value="{{influencer_id}}" hidden>
                               <input type="text" name="influencer-name" value="{{influencer_name}}" hidden>
                               <input type="text" name="campaign-id" value="{{campaign.id}}" hidden>
-                              <button type="submit" class="btn btn-primary">Select this campaign</button>
+                              <input type="text" name="campaign-budget" value="{{campaign.budget}}" hidden>
+                              {% if not campaign.flag %}
+                                <button type="submit" class="btn btn-primary">Select this campaign</button>
+                              {% else %}
+                                <h5 class="card-text" style="color: #aa0000;">This campaign has been flagged</h5>
+                              {% endif %}
                             </div>
                           </div>
                         </div>

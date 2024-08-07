@@ -71,12 +71,16 @@
                                     <p class="card-text">Industry: {{campaign.industry}}</p>
                                     <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
                                     <h5 class="card-text">Payment amount: {{campaign.budget}}</h5>
-                                  
+                                    {% if not influencer.flag %}
                                     <button class="btn btn-primary">Send ad request</button>
+                                    {% else %}
+                                    <h5 class="card-text not-allowed-text">You are not allowed to send ad requests</h5>
+                                    {% endif %}
                                     
                                     <input type="text" name="sponsor-name" value="{{campaign.sponsor.name}}" hidden>
                                     <input type="text" name="sponsor-id" value="{{campaign.sponsor.id}}" hidden>
                                     <input type="text" name="campaign-id" value="{{campaign.id}}" hidden>
+                                    <input type="text" name="campaign-budget" value="{{campaign.budget}}" hidden>
                                     
                   
                                 </div>

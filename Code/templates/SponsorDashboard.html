@@ -113,6 +113,7 @@
 <table class="table">
         <tbody>
             {% for campaign in campaign_list %}
+                
             <tr>
                 <div class="row card-width">
                     <div class="col-sm-6 mb-3 mb-sm-0">
@@ -123,6 +124,11 @@
                           <p class="card-text">{{campaign.description}}</p>
                           <p class="card-text">Industry: {{campaign.industry}}</p>
                           <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                          
+                          {% if campaign.flag %}
+                            <h5 class="card-text flagged-text">This campaign has been flagged</h5>
+                          {% endif %}
+
                           <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cardModal" data-val="{{campaign.id}}#{{campaign.title}}#{{campaign.description}}#{{campaign.industry}}#{{campaign.start_date}}#{{campaign.end_date}}#{{campaign.budget}}#{{campaign.private}}">Edit details</button>
                           &nbsp;&nbsp;&nbsp;&nbsp;
                           <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteCampaignModal" data-val="{{campaign.id}}#">Delete</button>
@@ -292,7 +298,7 @@
                                     <p class="card-text">{{campaign.description}}</p>
                                     <p class="card-text">Industry: {{campaign.industry}}</p>
                                     <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
-                                
+                                    <h5 class="card-text">Payment amount: Rs.{{ad_request.Negotiation_payment_amount}}</h5>
                                     <div class="campaign-in-progress-text"><p class="card-text">Campaign in progress by <strong>{{ad_request.influencer_name}}</strong></p></div>
                                     
                                 </div>

@@ -1,0 +1,40 @@
+.navbar-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.navbar-all{
+    display:flex;
+}
+
+.form-div{
+    justify-content: center; 
+}
+
+.welcome{
+    display: flex;
+    justify-content: center;
+    align-items: right;
+    margin-top: 1.8%;
+    margin-bottom: 2%;
+}
+
+.cards{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.negotiation{
+    margin-top: 3.8%;
+}
+
+.flag-campaign-text{
+    color: #aa0000;
+}
+
+.my-campaign-button{
+    margin-bottom: 2%;
+}

@@ -79,7 +79,12 @@
 
                 {% if campaign.id == ad_request.campaign_id %}
 
-                    {% if ad_request.request_type == 'S' and ad_request.request_status == 'pending' %}
+                    {% if not ad_request.flag %}
+
+                        {% if ad_request.request_type == 'S' and ad_request.request_status == 'pending' %}
+
+                            
+
                         <form action="/update_sponsor_ad_request" method="post">    
                             <tr>
                                 <div class="row cards">
@@ -108,34 +113,113 @@
                                 </div>
                             </tr>
                         </form>
-                    {% elif ad_request.request_type == 'S' and ad_request.request_status == 'accepted' %}
+
+                    {% elif ad_request.request_type == 'S' and ad_request.request_status == 'negotiation' and ad_request.Negotiation_type == 'S' %}
+
+                            <tr>
+                                <div class="row cards">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <div class="card text-bg-light mb-3">
+
+                                        <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                        <div class="card-body">
+                                            
+                                            <p class="card-text">{{campaign.description}}</p>
+                                            <p class="card-text">Industry: {{campaign.industry}}</p>
+                                            <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                        
+                                            
+                                               &nbsp;&nbsp;
+
+                                            <h5>Negotiation request sent. Awaiting {{ad_request.influencer_name}}'s response.</h5>    
+
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </tr>
+
+                    {% elif ad_request.request_type == 'S' and ad_request.request_status == 'negotiation' and ad_request.Negotiation_type == 'I' %}
+
+                            <tr>
+                                <div class="row cards">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <div class="card text-bg-light mb-3">
+
+                                        <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                        <div class="card-body">
+                                            
+                                            <p class="card-text">{{campaign.description}}</p>
+                                            <p class="card-text">Industry: {{campaign.industry}}</p>
+                                            <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                        
+                                            
+                                            <div>
+                                                Negotiation request from <strong>{{ad_request.influencer_name}}</strong>
+                                                <h5>Message: {{ad_request.Negotiation_message}}</h5>
+                                            </div>
+
+                                                &nbsp;&nbsp;
+
+                                            <div class="accept-reject-buttons">    
+                                                <form action="/update_sponsor_ad_request" method="post">
+                                                    <button type="submit" class="btn btn-primary">Accept request</button>
+                                                    <input type="text" name="message" value="request accepted" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                    <input type="text" name="negotiation-type" value="S" hidden>
+                                                </form>
+                                            
+                                                &nbsp;&nbsp;
+
+                                                <form action="/update_sponsor_ad_request" method="post">
+                                                <button type="submit" class="btn btn-primary">Withdraw request</button>
+                                                <input type="text" name="message" value="request rejected" hidden>
+                                                <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                <input type="text" name="negotiation-type" value="S" hidden>
+                                                </form>
+
+                                                <form action="/update_sponsor_ad_request" method="post">
+                                                    <button type="submit" class="btn btn-primary">Negotiate</button>
+                                                    Amount: <input type="text" name="negotiation-amount">
+                                                    Message: <input type="text" name="negotiation-message">
+                                                    <input type="text" name="message" value="negotiation" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                    <input type="text" name="negotiation-type" value="S" hidden>
+                                                    
+                                                </form>
+                                            </div>    
+
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </tr>
+
+                    {% elif ad_request.request_type == 'S' and ad_request.request_status == 'accepted' and not ad_request.Negotiation_type %}
                         
                     <tr>
                         <div class="row cards">
                             <div class="col-sm-6 mb-3 mb-sm-0">
                             <div class="card text-bg-light mb-3">
 
-                                <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+                                <h5 class="card-header cards" id="cardTitle">{{campaign.title}}</h5>
 
                                 <div class="card-body">
                                     
-                                    <p class="card-text">{{campaign.description}}</p>
-                                    <p class="card-text">Industry: {{campaign.industry}}</p>
-                                    <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
-                                
+                                    <p class="card-text cards"><strong>Goal:</strong>&nbsp;{{campaign.description}}</p>
+                                    <p class="card-text cards">Industry: {{campaign.industry}}</p>
+                                    <p class="card-text cards">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
                                     
-                                    <div><strong>{{ad_request.influencer_name}}</strong> accepted your offer</div>
+                                    <h5 class="accepted-text cards"><strong>{{ad_request.influencer_name}}</strong>&nbsp;accepted your offer</h5>
 
-                                        &nbsp;&nbsp;
-
-                                    <div class="accept-reject-buttons">    
+                                    <div class="accept-reject-buttons cards negotiation">    
                                         <form action="/update_sponsor_ad_request" method="post">
-                                            <button type="submit" class="btn btn-primary">&lt;-- Send to dashboard</button>
+                                            <div class="cards"><button type="submit" class="btn btn-primary">&lt;-- Send to dashboard</button></div>
                                             <input type="text" name="message" value="dashboard" hidden>
                                             <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
                                         </form>
-                                    
-                                        &nbsp;&nbsp;
                                     </div>    
 
                                 </div>
@@ -144,7 +228,79 @@
                         </div>
                     </tr>
 
-                    {% elif ad_request.request_type == 'S' and ad_request.request_status == 'rejected' %}
+
+                    {% elif ad_request.request_status == 'accepted' and ad_request.Negotiation_type == 'S' %}
+                        
+                            <tr>
+                                <div class="row cards">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <div class="card text-bg-light mb-3">
+
+                                        <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                        <div class="card-body">
+                                            
+                                            <p class="card-text">{{campaign.description}}</p>
+                                            <p class="card-text">Industry: {{campaign.industry}}</p>
+                                            <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                            
+                                            <div><strong>You accepted {{ad_request.influencer_name}}</strong>'s offer</div>
+
+                                                &nbsp;&nbsp;
+
+                                            <div class="accept-reject-buttons">    
+                                                <form action="/update_sponsor_ad_request" method="post">
+                                                    <button type="submit" class="btn btn-primary">&lt;-- Send to dashboard</button>
+                                                    <input type="text" name="message" value="dashboard" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                </form>
+                                            
+                                                &nbsp;&nbsp;
+                                            </div>    
+
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </tr>
+
+
+                            {% elif ad_request.request_status == 'accepted' and ad_request.Negotiation_type == 'I' %}
+                        
+                                    <tr>
+                                        <div class="row cards">
+                                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                            <div class="card text-bg-light mb-3">
+                
+                                                <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+                
+                                                <div class="card-body">
+                                                    
+                                                    <p class="card-text">{{campaign.description}}</p>
+                                                    <p class="card-text">Industry: {{campaign.industry}}</p>
+                                                    <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                                    
+                                                    <div><strong>{{ad_request.influencer_name}}</strong> accepted your offer</div>
+                
+                                                        &nbsp;&nbsp;
+                
+                                                    <div class="accept-reject-buttons">    
+                                                        <form action="/update_sponsor_ad_request" method="post">
+                                                            <button type="submit" class="btn btn-primary">&lt;-- Send to dashboard</button>
+                                                            <input type="text" name="message" value="dashboard" hidden>
+                                                            <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                        </form>
+                                                    
+                                                        &nbsp;&nbsp;
+                                                    </div>    
+                
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </tr>
+
+                    {% elif ad_request.request_type == 'S' and ad_request.request_status == 'rejected' and not ad_request.Negotiation_type %}
 
                         <form action="/update_sponsor_ad_request" method="post">    
                             <tr>
@@ -162,7 +318,7 @@
                                         
                                             <div>
                                                 <div class="rejected-text">
-                                                Your ad request has been <strong>rejected</strong> by {{ad_request.influencer_name}}
+                                                <h5>{{ad_request.influencer_name}} rejected your offer.</h5>
                                                 </div>
                                                 &nbsp;&nbsp;
 
@@ -178,7 +334,77 @@
                             </tr>
                         </form>
 
-                    {% elif ad_request.request_type == 'I' and ad_request.request_status == 'pending' %}
+
+                        {% elif ad_request.request_status == 'rejected' and ad_request.Negotiation_type == 'S' %}
+
+                                <form action="/update_sponsor_ad_request" method="post">    
+                                    <tr>
+                                        <div class="row cards">
+                                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                            <div class="card text-bg-light mb-3">
+
+                                                <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                                <div class="card-body">
+                                                    
+                                                    <p class="card-text">{{campaign.description}}</p>
+                                                    <p class="card-text">Industry: {{campaign.industry}}</p>
+                                                    <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                                
+                                                    <div>
+                                                        <div class="rejected-text">
+                                                        <h5>You rejected {{ad_request.influencer_name}}'s offer.</h5>
+                                                        </div>
+                                                        &nbsp;&nbsp;
+
+                                                        <button type="submit" class="btn btn-primary">Delete request</button>
+                                                        <input type="text" name="message" value="unsend request" hidden>
+                                                        <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </tr>
+                                </form>
+
+
+                                {% elif ad_request.request_status == 'rejected' and ad_request.Negotiation_type == 'I' %}
+
+                                        <form action="/update_sponsor_ad_request" method="post">    
+                                            <tr>
+                                                <div class="row cards">
+                                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                                    <div class="card text-bg-light mb-3">
+                
+                                                        <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+                
+                                                        <div class="card-body">
+                                                            
+                                                            <p class="card-text">{{campaign.description}}</p>
+                                                            <p class="card-text">Industry: {{campaign.industry}}</p>
+                                                            <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                                        
+                                                            <div>
+                                                                <div class="rejected-text">
+                                                                <h5>{{ad_request.influencer_name}} rejected your offer.</h5>
+                                                                </div>
+                                                                &nbsp;&nbsp;
+                
+                                                                <button type="submit" class="btn btn-primary">Delete request</button>
+                                                                <input type="text" name="message" value="unsend request" hidden>
+                                                                <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </tr>
+                                        </form>
+
+                    {% elif ad_request.request_type == 'I' and ad_request.request_status == 'pending' and not ad_request.Negotiation_type %}
 
                         
                         <tr>
@@ -186,24 +412,25 @@
                                 <div class="col-sm-6 mb-3 mb-sm-0">
                                 <div class="card text-bg-light mb-3">
 
-                                    <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+                                    <h5 class="card-header cards" id="cardTitle">{{campaign.title}}</h5>
 
                                     <div class="card-body">
                                         
-                                        <p class="card-text">{{campaign.description}}</p>
-                                        <p class="card-text">Industry: {{campaign.industry}}</p>
-                                        <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                        <p class="card-text cards"><strong>Goal:&nbsp;</strong> {{campaign.description}}</p>
+                                        <p class="card-text cards">Industry: {{campaign.industry}}</p>
+                                        <p class="card-text cards">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
                                     
                                         
-                                        <div>Ad request from <strong>{{ad_request.influencer_name}}</strong></div>
+                                        <h5 class="card-text ad-request-message cards">Ad request from &nbsp;<strong>{{ad_request.influencer_name}}</strong></h5>
 
                                             &nbsp;&nbsp;
 
-                                        <div class="accept-reject-buttons">    
+                                        <div class="accept-reject-buttons cards">    
                                             <form action="/update_sponsor_ad_request" method="post">
                                                 <button type="submit" class="btn btn-primary">Accept request</button>
                                                 <input type="text" name="message" value="request accepted" hidden>
                                                 <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                <input type="text" name="negotiation-type" value="" hidden>
                                             </form>
                                         
                                             &nbsp;&nbsp;
@@ -213,16 +440,110 @@
                                             <input type="text" name="message" value="request rejected" hidden>
                                             <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
                                             </form>
-                                        </div>    
+                                        </div>
+                                        <div class="negotiation">
+                                            <form action="/update_sponsor_ad_request" method="post">
+                                                
+                                                <p class="card-text cards">Amount:&nbsp; <input type="text" name="negotiation-amount"></p>
+                                                <p class="card-text cards">Message:&nbsp; <input type="text" name="negotiation-message"></p>
+                                                <div class="cards"><button type="submit" class="btn btn-primary ">Negotiate</button></div>
+                                                <input type="text" name="message" value="negotiation" hidden>
+                                                <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                <input type="text" name="negotiation-type" value="S" hidden>
+                                            </form>
+                                        </div>
+                                    </div>    
 
                                     </div>
                                 </div>
                                 </div>
                             </div>
                         </tr>
-                    
 
-                    {% elif ad_request.request_type == 'I' and ad_request.request_status == 'accepted' %}
+
+                        {% elif ad_request.request_type == 'I' and ad_request.request_status == 'negotiation' and ad_request.Negotiation_type == 'S' %}
+
+                                <tr>
+                                    <div class="row cards">
+                                        <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <div class="card text-bg-light mb-3">
+
+                                            <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                            <div class="card-body">
+                                                
+                                                <p class="card-text cards">{{campaign.description}}</p>
+                                                <p class="card-text cards">Industry: {{campaign.industry}}</p>
+                                                <p class="card-text cards">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                                <h5 class="card-text cards">Your offer:&nbsp;{{ad_request.Negotiation_payment_amount}}</h5>
+                                                
+                                                <div cards>
+                                                    <h5>Negotiation request sent. Awaiting {{ad_request.influencer_name}}'s response.</h5>
+                                                </div>
+
+                                            </div>    
+                                        </div>
+                                        </div>
+                                    </div>
+                                </tr>
+
+                        {% elif ad_request.request_type == 'I' and ad_request.request_status == 'negotiation' and ad_request.Negotiation_type == 'I' %}
+                    
+                                <tr>
+                                    <div class="row cards">
+                                        <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <div class="card text-bg-light mb-3">
+
+                                            <h5 class="card-header cards" id="cardTitle">{{campaign.title}}</h5>
+
+                                            <div class="card-body">
+                                                
+                                                <p class="card-text cards">{{campaign.description}}</p>
+                                                <p class="card-text cards">Industry: {{campaign.industry}}</p>
+                                                <p class="card-text cards">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                            
+                                                
+                                                <div class="cards">Negotiation request from <strong>{{ad_request.influencer_name}}</strong></div>
+                                                <h5 cards>Message: {{ad_request.Negotiation_message}}</h5>
+                                                
+
+                                                    &nbsp;&nbsp;
+
+                                                <div class="accept-reject-buttons">    
+                                                    <form action="/update_sponsor_ad_request" method="post">
+                                                        <button type="submit" class="btn btn-primary cards">Accept request</button>
+                                                        <input type="text" name="message" value="request accepted" hidden>
+                                                        <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                        <input type="text" name="negotiation-type" value="S" hidden>
+                                                    </form>
+                                                
+                                                    &nbsp;&nbsp;
+
+                                                    <form action="/update_sponsor_ad_request" method="post">
+                                                    <button type="submit" class="btn btn-primary cards">Reject request</button>
+                                                    <input type="text" name="message" value="request rejected" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                    <input type="text" name="negotiation-type" value="S" hidden>
+                                                </form>
+                                                </div>
+                                                <div>
+                                                    <form action="/update_sponsor_ad_request" method="post">
+                                                        <button type="submit" class="btn btn-primary">Negotiate</button>
+                                                        <div>Amount: <input type="text" name="negotiation-amount"></div>
+                                                        <div>Message: <input type="text" name="negotiation-message"></div>
+                                                        <input type="text" name="message" value="request rejected" hidden>
+                                                        <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                        <input type="text" name="negotiation-type" value="S" hidden>
+                                                    </form>
+                                                </div>    
+
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </tr>
+
+                    {% elif ad_request.request_type == 'I' and ad_request.request_status == 'accepted' and not ad_request.Negotiation_type %}
 
                     <tr>
                         <div class="row cards">
@@ -275,7 +596,7 @@
                                 
                                     
                                     <div class="rejected-text">
-                                        You rejected <strong>{{ad_request.influencer_name}}</strong>'s offer
+                                        <h5>You rejected <strong>{{ad_request.influencer_name}}</strong>'s offer</h5>
                                     </div>
 
                                         &nbsp;&nbsp;
@@ -296,6 +617,33 @@
                         </div>
                     </tr>
 
+                        {% endif %}
+
+                        {% else %}
+
+                                <tr>
+                                    <div class="row cards">
+                                        <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <div class="card text-bg-light mb-3">
+
+                                        <h5 class="card-header cards" id="cardTitle">{{campaign.title}}</h5>
+                                        
+                                    <div class="card-body">
+                                        <p class="card-text cards">{{campaign.description}}</p>
+                                        <p class="card-text cards">Industry: {{campaign.industry}}</p>
+                                        <p class="card-text cards">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                    
+                                        
+                                        <div class="cards">Sponsor:<strong>&nbsp; {{ad_request.sponsor_name}}</strong> &nbsp;&nbsp; Influencer:<strong>&nbsp; {{ad_request.influencer_name}}</strong></div>
+                                        <h5 class="cards negotiation rejected-text">FLAGGED</h5>
+                                    </div>
+                                                
+
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </tr>
 
                     {% endif %}
 
@@ -307,7 +655,7 @@
 
     </table>
 
-    <!-- Ad request handler for influencers -->
+                <!-- Ad request handler for influencers -->
 
     {% elif user_type == 'influencer' %}
 
@@ -326,7 +674,58 @@
 
                 {% if campaign.id == ad_request.campaign_id %}
 
-                    {% if ad_request.request_type == 'S' and ad_request.request_status == 'pending' %}
+                    {% if not ad_request.flag %}
+
+                        {% if ad_request.request_type == 'S' and ad_request.request_status == 'pending' %}
+
+                            <tr>
+                                <div class="row cards">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <div class="card text-bg-light mb-3">
+
+                                        <h5 class="card-header cards" id="cardTitle">{{campaign.title}}</h5>
+
+                                        <div class="card-body">
+                                            
+                                            <h5 class="card-text cards">Ad request from &nbsp;<strong>{{ad_request.sponsor_name}}</strong></h5>
+                                            <p class="card-text cards"><strong>Goal:</strong> &nbsp; {{campaign.description}}</p>
+                                            <p class="card-text cards">Industry: {{campaign.industry}}</p>
+                                            <p class="card-text cards">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                            <h4 class="card-text cards">Payment amount: {{ad_request.Negotiation_payment_amount}}</h4>
+                                            &nbsp;
+                                            <div class="accept-reject-buttons cards">
+                                                <form action="/update_influencer_ad_request" method="post">
+                                                    <button type="submit" class="btn btn-primary">Accept</button>
+                                                    <input type="text" name="message" value="request accepted" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                    <input type="text" name="negotiation-type" value="" hidden>
+                                                </form>
+                                                &nbsp;&nbsp;
+                                                <form action="/update_influencer_ad_request" method="post">
+                                                    <button type="submit" class="btn btn-primary">Reject</button>
+                                                    <input type="text" name="message" value="request rejected" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                </form>
+                                            </div>
+                                            <div class="negotiation">
+                                                <form action="/update_influencer_ad_request" method="post">
+                                                    
+                                                    <p class="cards">Amount: <input type="text" name="negotiation-amount"></p>
+                                                    <p class="cards">Message: <input type="text" name="negotiation-message"></p>
+                                                    <div class="cards"><button type="submit" class="btn btn-primary">Negotiate</button></div>
+                                                    <input type="text" name="message" value="negotiation" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                    <input type="text" name="negotiation-type" value="I" hidden>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </tr>
+
+
+                    {% elif ad_request.request_type == 'S' and ad_request.request_status == 'negotiation' and ad_request.Negotiation_type == 'I' %}
 
                             <tr>
                                 <div class="row cards">
@@ -341,20 +740,10 @@
                                             <p class="card-text">{{campaign.description}}</p>
                                             <p class="card-text">Industry: {{campaign.industry}}</p>
                                             <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
-                                            <h4 class="card-text">Payment amount: {{campaign.budget}}</h4>
+                                            <h4 class="card-text">Payment amount: {{ad_request.Negotiation_payment_amount}}</h4>
                                             &nbsp;
                                             <div class="accept-reject-buttons">
-                                                <form action="/update_influencer_ad_request" method="post">
-                                                    <button type="submit" class="btn btn-primary">Accept</button>
-                                                    <input type="text" name="message" value="request accepted" hidden>
-                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
-                                                </form>
-                                                &nbsp;&nbsp;
-                                                <form action="/update_influencer_ad_request" method="post">
-                                                    <button type="submit" class="btn btn-primary">Reject</button>
-                                                    <input type="text" name="message" value="request rejected" hidden>
-                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
-                                                </form>
+                                                <h5>Request sent. Awaiting response from {{ad_request.sponsor_name}}</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -362,8 +751,7 @@
                                 </div>
                             </tr>
 
-
-                    {% elif ad_request.request_type == 'S' and ad_request.request_status == 'accepted' %}
+                    {% elif ad_request.request_type == 'S' and ad_request.request_status == 'negotiation' and ad_request.Negotiation_type == 'S' %}
 
                             <tr>
                                 <div class="row cards">
@@ -374,15 +762,64 @@
 
                                         <div class="card-body">
                                             
-                                            <p class="card-text">You accepted <strong>{{ad_request.sponsor_name}}</strong>'s ad request</p>
+                                            <p class="card-text">Ad request from <strong>{{ad_request.sponsor_name}}</strong></p>
                                             <p class="card-text">{{campaign.description}}</p>
                                             <p class="card-text">Industry: {{campaign.industry}}</p>
                                             <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
-                                            <h4 class="card-text">Payment amount: {{campaign.budget}}</h4>
+                                            <h4 class="card-text">Payment amount: {{ad_request.Negotiation_payment_amount}}</h4>
                                             &nbsp;
-                                            <div>
+                                            <div class="accept-reject-buttons">
                                                 <form action="/update_influencer_ad_request" method="post">
-                                                    <button type="submit" class="btn btn-primary">&lt;-- Send to dashboard</button>
+                                                    <button type="submit" class="btn btn-primary">Accept</button>
+                                                    <input type="text" name="message" value="request accepted" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                    <input type="text" name="negotiation-type" value="I">
+                                                </form>
+                                               
+                                                <form action="/update_influencer_ad_request" method="post">
+                                                    <button type="submit" class="btn btn-primary">Reject</button>
+                                                    <input type="text" name="message" value="request rejected" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                    <input type="text" name="negotiation-type" value="I">
+                                                </form>
+                                            </div>
+                                            <div>
+                                                <h5>Message from {{ad_request.sponsor_name}}: {{ad_request.Negotiation_message}}</h5>
+                                                <form action="/update_influencer_ad_request" method="post">
+                                                    <button type="submit" class="btn btn-primary">Negotiate</button>
+                                                    Amount: <input type="text" name="negotiation-amount">
+                                                    Message: <input type="text" name="negotiation-message">
+                                                    <input type="text" name="message" value="negotiation" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                    <input type="text" name="negotiation-type" value="I" hidden>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </tr>
+
+                    {% elif ad_request.request_type == 'S' and ad_request.request_status == 'accepted' and not ad_request.Negotiation_type %}
+
+                            <tr>
+                                <div class="row cards">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <div class="card text-bg-light mb-3">
+
+                                        <h5 class="card-header cards" id="cardTitle">{{campaign.title}}</h5>
+
+                                        <div class="card-body">
+                                            
+                                            
+                                            <p class="card-text cards"><strong>Goal:</strong>&nbsp;{{campaign.description}}</p>
+                                            <p class="card-text cards">Industry: {{campaign.industry}}</p>
+                                            <p class="card-text cards">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                            <h4 class="card-text cards">Payment amount: {{ad_request.Negotiation_payment_amount}}</h4>
+                                            <h5 class="card-text accepted-text cards">You accepted&nbsp;<strong>{{ad_request.sponsor_name}}</strong>'s ad request</h5>
+                                            <div class="negotiation">
+                                                <form action="/update_influencer_ad_request" method="post">
+                                                    <div class="cards"><button type="submit" class="btn btn-primary">&lt;-- Send to dashboard</button></div>
                                                     <input type="text" name="message" value="dashboard" hidden>
                                                     <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
                                                 </form>
@@ -394,7 +831,70 @@
                                 </div>
                             </tr>
 
-                    {% elif ad_request.request_type == 'S' and ad_request.request_status == 'rejected' %}
+
+                            {% elif ad_request.request_status == 'accepted' and ad_request.Negotiation_type == 'S' %}
+
+                                    <tr>
+                                        <div class="row cards">
+                                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                            <div class="card text-bg-light mb-3">
+
+                                                <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                                <div class="card-body">
+                                                    
+                                                    <p class="card-text">{{campaign.description}}</p>
+                                                    <p class="card-text">Industry: {{campaign.industry}}</p>
+                                                    <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                                    <h5 class="card-text">Payment amount: {{ad_request.Negotiation_payment_amount}}</h5>
+                                                    <p class="card-text"><strong>{{ad_request.sponsor_name}}</strong> accepted your offer</p>
+                                                    <div>
+                                                        <form action="/update_influencer_ad_request" method="post">
+                                                            <button type="submit" class="btn btn-primary">&lt;-- Send to dashboard</button>
+                                                            <input type="text" name="message" value="dashboard" hidden>
+                                                            <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                        </form>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </tr>
+
+
+                                    {% elif ad_request.request_status == 'accepted' and ad_request.Negotiation_type == 'I' %}
+
+                                            <tr>
+                                                <div class="row cards">
+                                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                                    <div class="card text-bg-light mb-3">
+
+                                                        <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                                        <div class="card-body">
+                                                            
+                                                            <p class="card-text">{{campaign.description}}</p>
+                                                            <p class="card-text">Industry: {{campaign.industry}}</p>
+                                                            <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                                            <h5 class="card-text">Payment amount: {{ad_request.Negotiation_payment_amount}}</h5>
+                                                            <p class="card-text"><strong>You accepted {{ad_request.sponsor_name}}</strong>'s offer</p>
+                                                            <div>
+                                                                <form action="/update_influencer_ad_request" method="post">
+                                                                    <button type="submit" class="btn btn-primary">&lt;-- Send to dashboard</button>
+                                                                    <input type="text" name="message" value="dashboard" hidden>
+                                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                                </form>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </tr>
+                                    
+
+                    {% elif ad_request.request_type == 'S' and ad_request.request_status == 'rejected' and not ad_request.Negotiation_type %}
 
                             <tr>
                                 <div class="row cards">
@@ -409,9 +909,9 @@
                                             <p class="card-text">{{campaign.description}}</p>
                                             <p class="card-text">Industry: {{campaign.industry}}</p>
                                             <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
-                                            <h4 class="card-text">Payment amount: {{campaign.budget}}</h4>
+                                            <h4 class="card-text">Payment amount: {{ad_request.Negotiation_payment_amount}}</h4>
                                             &nbsp;
-                                            <p class="card-text rejected-text">You rejected <strong>{{ad_request.sponsor_name}}</strong>'s request</p>
+                                            <h5 class="card-text rejected-text">You rejected {{ad_request.sponsor_name}}'s offer.</strong></h5>
                                             
                                         </div>
                                     </div>
@@ -419,8 +919,60 @@
                                 </div>
                             </tr>
 
+
+                            {% elif ad_request.request_status == 'rejected' and ad_request.Negotiation_type == 'S' %}
+
+                                    <tr>
+                                        <div class="row cards">
+                                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                            <div class="card text-bg-light mb-3">
+
+                                                <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                                <div class="card-body">
+                                                    
+                                                    
+                                                    <p class="card-text">{{campaign.description}}</p>
+                                                    <p class="card-text">Industry: {{campaign.industry}}</p>
+                                                    <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                                    <h4 class="card-text">Payment amount: {{ad_request.Negotiation_payment_amount}}</h4>
+                                                    &nbsp;
+                                                    <h5 class="card-text rejected-text">{{ad_request.sponsor_name}}&nbsp; rejected your offer.</strong></h5>
+                                                    
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </tr>
+
+
+                            {% elif ad_request.request_status == 'rejected' and ad_request.Negotiation_type == 'I' %}
+
+                                    <tr>
+                                        <div class="row cards">
+                                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                            <div class="card text-bg-light mb-3">
+
+                                                <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                                <div class="card-body">
+                                                    
+                                                    
+                                                    <p class="card-text">{{campaign.description}}</p>
+                                                    <p class="card-text">Industry: {{campaign.industry}}</p>
+                                                    <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                                    <h4 class="card-text">Payment amount: {{ad_request.Negotiation_payment_amount}}</h4>
+                                                    &nbsp;
+                                                    <h5 class="card-text rejected-text">You rejected {{ad_request.sponsor_name}}'s offer.</strong></h5>
+                                                    
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </tr>
+
                     {% elif ad_request.request_type == 'I' and ad_request.request_status == 'pending' %}
-                        <form class="/update_influencer_ad_request" action="post">    
+                            
                             <tr>
                                 <div class="row cards">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
@@ -433,8 +985,9 @@
                                             <p class="card-text">{{campaign.description}}</p>
                                             <p class="card-text">Industry: {{campaign.industry}}</p>
                                             <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
-                                            <h4 class="card-text">Payment amount: {{campaign.budget}}</h4>
+                                            <h4 class="card-text">Payment amount: {{ad_request.Negotiation_payment_amount}}</h4>
                                             &nbsp;
+                                            <form action="/update_influencer_ad_request" method="post">
                                             <div>
                                                 <button type="submit" class="btn btn-primary">Unsend request</button>
                                                 <input type="text" name="message" value="unsend request" hidden>
@@ -442,14 +995,93 @@
                                                 &nbsp;&nbsp;
                                                 Ad request sent to {{ad_request.sponsor_name}}
                                             </div>
+                                            </form>
                                         </div>
                                     </div>
                                     </div>
                                 </div>
                             </tr>
-                        </form>
+                        
 
-                    {% elif ad_request.request_type == 'I' and ad_request.request_status == 'accepted' %}
+                    
+                    {% elif ad_request.request_type == 'I' and ad_request.request_status == 'negotiation' and ad_request.Negotiation_type == 'S' %}
+
+                            <tr>
+                                <div class="row cards">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <div class="card text-bg-light mb-3">
+
+                                        <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                        <div class="card-body">
+                                            
+                                            <p class="card-text">Ad request from <strong>{{ad_request.sponsor_name}}</strong></p>
+                                            <p class="card-text">{{campaign.description}}</p>
+                                            <p class="card-text">Industry: {{campaign.industry}}</p>
+                                            <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                            <h4 class="card-text">Payment amount: {{ad_request.Negotiation_payment_amount}}</h4>
+                                            &nbsp;
+                                            <div class="accept-reject-buttons">
+                                                <form action="/update_influencer_ad_request" method="post">
+                                                    <button type="submit" class="btn btn-primary">Accept</button>
+                                                    <input type="text" name="message" value="request accepted" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                    <input type="text" name="negotiation-type" value="I" hidden>
+                                                </form>
+                                                &nbsp;&nbsp;
+                                                <form action="/update_influencer_ad_request" method="post">
+                                                    <button type="submit" class="btn btn-primary">Reject</button>
+                                                    <input type="text" name="message" value="request rejected" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                    <input type="text" name="negotiation-type" value="I" hidden>
+                                                </form>
+                                                
+                                                </div>
+                                                <div>
+                                                <h5>Message from {{ad_request.sponsor_name}}: {{ad_request.Negotiation_message}}</h5>
+                                                <form action="/update_influencer_ad_request" method="post">
+                                                    <button type="submit" class="btn btn-primary">Negotiate</button>
+                                                    Amount: <input type="text" name="negotiation-payment-amount">
+                                                    Message: <input type="text" name="negotiation-message">
+                                                    <input type="text" name="message" value="negotiation" hidden>
+                                                    <input type="text" name="ad-request-id" value="{{ad_request.id}}" hidden>
+                                                    <input type="text" name="negotiation-type" value="I" hidden>
+                                                </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </tr>
+
+                    {% elif ad_request.request_type == 'I' and ad_request.request_status == 'negotiation' and ad_request.Negotiation_type == 'I' %}
+
+                            <tr>
+                                <div class="row cards">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <div class="card text-bg-light mb-3">
+
+                                        <h5 class="card-header" id="cardTitle">{{campaign.title}}</h5>
+
+                                        <div class="card-body">
+                                            
+                                           
+                                            <p class="card-text">{{campaign.description}}</p>
+                                            <p class="card-text">Industry: {{campaign.industry}}</p>
+                                            <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                            <h5 class="card-text">Payment amount: {{ad_request.Negotiation_payment_amount}}</h5>
+                                            
+                                            
+                                           <h5 class="card-text">Request sent. Awaiting response from {{ad_request.sponsor_name}}</h5>
+                                            
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </tr>
+
+                    {% elif ad_request.request_type == 'I' and ad_request.request_status == 'accepted' and not ad_request.Negotiation_type %}
                         
                             <tr>
                                 <div class="row cards">
@@ -464,7 +1096,7 @@
                                             <p class="card-text">{{campaign.description}}</p>
                                             <p class="card-text">Industry: {{campaign.industry}}</p>
                                             <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
-                                            <h4 class="card-text">Payment amount: {{campaign.budget}}</h4>
+                                            <h4 class="card-text">Payment amount: {{ad_request.Negotiation_payment_amount}}</h4>
                                             &nbsp;
                                             <p class="card-text"><p class="card-text">Your request has been accepted by <strong>{{ad_request.sponsor_name}}</strong></p></p>
                                             <div>
@@ -496,9 +1128,9 @@
                                             <p class="card-text">{{campaign.description}}</p>
                                             <p class="card-text">Industry: {{campaign.industry}}</p>
                                             <p class="card-text">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
-                                            <h4 class="card-text">Payment amount: {{campaign.budget}}</h4>
+                                            <h4 class="card-text">Payment amount: {{ad_request.Negotiation_payment_amount}}</h4>
                                             &nbsp;
-                                            <p class="card-text rejected-text">><strong>{{ad_request.sponsor_name}}</strong> has rejected your request.</p>
+                                            <h5 class="card-text rejected-text"><strong>{{ad_request.sponsor_name}}</strong> has rejected your request.</h5>
                                             
                                         </div>
                                     </div>
@@ -506,7 +1138,35 @@
                                 </div>
                             </tr>
 
+                        
 
+                        {% endif %}
+
+                        {% else %}
+
+                                <tr>
+                                    <div class="row cards">
+                                        <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <div class="card text-bg-light mb-3">
+
+                                        <h5 class="card-header cards" id="cardTitle">{{campaign.title}}</h5>
+                                        
+                                    <div class="card-body">
+                                        <p class="card-text cards">{{campaign.description}}</p>
+                                        <p class="card-text cards">Industry: {{campaign.industry}}</p>
+                                        <p class="card-text cards">Created: {{campaign.start_date.date()}} &nbsp;&nbsp;  Ends at: {{campaign.end_date.date()}}</p>
+                                    
+                                        
+                                        <div class="cards">Sponsor:<strong>&nbsp; {{ad_request.sponsor_name}}</strong> &nbsp;&nbsp; Influencer:<strong>&nbsp; {{ad_request.influencer_name}}</strong></div>
+                                        <h5 class="cards negotiation rejected-text">FLAGGED</h5>
+                                    </div>
+                                                
+
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </tr>
                     {% endif %}
 
                 {% endif %}

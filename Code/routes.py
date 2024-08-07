@@ -112,16 +112,16 @@ def edit_influencer_profile():
 
 @main.route('/influencer-search-campaign',methods=['GET','POST'])
 def influencer_search_campaign():
+    new_campaign_list = []
+
     if request.method == 'POST':
         search_term = request.form.get('search-term')
         if search_term == '':
             campaign_list = Campaign.query.all()
-            print(campaign_list)
+            
         else:
             campaign_list = Campaign.query.filter_by(industry=search_term).all()
 
-        new_campaign_list = []
-            
         ad_request_list = Ad_requests.query.filter_by(influencer_id=session['influencer_id']).all()
 
         if len(ad_request_list) == 0:
@@ -137,9 +137,9 @@ def influencer_search_campaign():
                 if match == False:
                     new_campaign_list.append(campaign)
 
+    influencer = Influencer.query.get(session['influencer_id'])   
         
-        
-        return render_template('InfluencerSearchCampaign.html',new_campaign_list=new_campaign_list)
+    return render_template('InfluencerSearchCampaign.html',new_campaign_list=new_campaign_list,influencer=influencer)
             
 
     return render_template('InfluencerSearchCampaign.html')
@@ -152,7 +152,9 @@ def influencer_add_ad_request():
         sponsor_id = request.form.get('sponsor-id')
         sponsor_name = request.form.get('sponsor-name')
         campaign_id = request.form.get('campaign-id')
-        print(campaign_id)
+
+        campain_budget = request.form.get('campaign-budget')
+
         influencer_id = session['influencer_id']
         influencer_name = Influencer.query.get(influencer_id).name
         request_type = 'I'
@@ -161,6 +163,12 @@ def influencer_add_ad_request():
         ad_request = Ad_requests(sponsor_id=sponsor_id,sponsor_name=sponsor_name,campaign_id=campaign_id,influencer_id=influencer_id,influencer_name=influencer_name,request_type=request_type,request_status=request_status)
 
         db.session.add(ad_request)
+        db.session.commit()
+
+        modified_ad_request = Ad_requests.query.filter_by(sponsor_id=sponsor_id,campaign_id=campaign_id,influencer_id=influencer_id).first()
+
+        modified_ad_request.Negotiation_payment_amount = campain_budget
+
         db.session.commit()
 
         return redirect(url_for('main.influencer_ad_request'))
@@ -185,6 +193,8 @@ def update_influencer_ad_request():
 
         ad_request.request_status = "accepted"
 
+        ad_request.Negotiation_type = request.form.get('negotiation-type')
+
         db.session.commit()
 
     elif message == "request rejected":
@@ -194,6 +204,8 @@ def update_influencer_ad_request():
 
         ad_request.request_status = "rejected"
 
+        ad_request.Negotiation_type = request.form.get('negotiation-type')
+
         db.session.commit()
 
     elif message == "dashboard":
@@ -202,6 +214,21 @@ def update_influencer_ad_request():
         ad_request = Ad_requests.query.get(ad_request_id)
 
         ad_request.request_status = "dashboard"
+
+        db.session.commit()
+
+    elif message == 'negotiation':
+        ad_request_id = request.form.get('ad-request-id')
+
+        ad_request = Ad_requests.query.get(ad_request_id)
+
+        ad_request.request_status = 'negotiation'
+
+        ad_request.Negotiation_type = request.form.get('negotiation-type')
+
+        ad_request.Negotiation_message = request.form.get('negotiation-message')
+
+        ad_request.Negotiation_payment_amount = request.form.get('negotiation-amount')
 
         db.session.commit()
 
@@ -340,7 +367,7 @@ def delete_campaign():
 def sponsor_search():
     msg = ""
     influencer_list = []
-
+    
     if request.method == 'POST':
         try:
             search_term = int(request.form.get('search-term'))
@@ -356,11 +383,17 @@ def sponsor_search():
         except:
             search_term = request.form.get('search-term')
 
-            influencer_list = Influencer.query.filter_by(industry=search_term).all()
-             
-            msg = f"No influencer found in {search_term} industry."
+            if search_term == '':
+                influencer_list = Influencer.query.all()
+
+            else:
+                influencer_list = Influencer.query.filter_by(industry=search_term).all()
+                
+                msg = f"No influencer found in {search_term} industry."
+
+    sponsor = Sponsor.query.get(session['sponsor_id'])
         
-    return render_template('SponsorSearchInfluencer.html',influencer_list=influencer_list,msg=msg)
+    return render_template('SponsorSearchInfluencer.html',influencer_list=influencer_list,msg=msg,sponsor=sponsor)
 
 
 @main.route('/select-campaign-for-influencer',methods=['GET','POST'])       # sponsor selects an influencer
@@ -397,6 +430,9 @@ def add_ad_request():
         sponsor_id = session['sponsor_id']
         sponsor_name = Sponsor.query.get(sponsor_id).name
         campaign_id = request.form.get('campaign-id')
+
+        campaign_budget = request.form.get('campaign-budget')
+
         influencer_id = request.form.get('influencer-id')
         influencer_name = request.form.get('influencer-name')
         request_type = 'S'
@@ -405,6 +441,11 @@ def add_ad_request():
         ad_request = Ad_requests(sponsor_id=sponsor_id,sponsor_name=sponsor_name,campaign_id=campaign_id,influencer_id=influencer_id,influencer_name=influencer_name,request_type=request_type,request_status=request_status)
         
         db.session.add(ad_request)
+        db.session.commit()
+
+        modify_ad_request = Ad_requests.query.filter_by(sponsor_id=sponsor_id,campaign_id=campaign_id,influencer_id=influencer_id).first()
+        modify_ad_request.Negotiation_payment_amount = campaign_budget
+
         db.session.commit()
 
     return redirect(url_for('main.sponsor_ad_request_page'))
@@ -430,6 +471,8 @@ def update_ad_request():
 
         ad_request.request_status = "accepted"
 
+        ad_request.Negotiation_type = request.form.get('negotiation-type')
+
         db.session.commit()
 
     elif message == "request rejected":
@@ -439,6 +482,8 @@ def update_ad_request():
 
         ad_request.request_status = "rejected"
 
+        ad_request.Negotiation_type = request.form.get('negotiation-type')
+
         db.session.commit()
 
     elif message == "dashboard":
@@ -447,6 +492,21 @@ def update_ad_request():
         ad_request = Ad_requests.query.get(ad_request_id)
 
         ad_request.request_status = "dashboard"
+
+        db.session.commit()
+
+    elif message == "negotiation":
+        ad_request_id = request.form.get('ad-request-id')
+
+        ad_request = Ad_requests.query.get(ad_request_id)
+
+        ad_request.request_status = 'negotiation'
+
+        ad_request.Negotiation_type = request.form.get('negotiation-type')
+
+        ad_request.Negotiation_message = request.form.get('negotiation-message')
+
+        ad_request.Negotiation_payment_amount = request.form.get('negotiation-amount')
 
         db.session.commit()
 
@@ -494,10 +554,230 @@ def adminLogin():
         user = Admin.query.filter_by(name=name,password=password).first()
 
         if user:
-            return render_template('AdminDashboard.html')
+            session['admin_id'] = user.id
+
+            return redirect(url_for("main.admin_page"))
         else:
             msg = "Wrong Credentials! Try again."
     return render_template('Login/AdminLogin.html',msg=msg)
+
+
+@main.route('/admin-page',methods=['GET'])                            # admin page
+def admin_page():
+    if session['admin_id']:
+        admin = Admin.query.get(session['admin_id'])
+
+        campaign_list = Campaign.query.all()
+
+        ad_request_list = Ad_requests.query.all()
+
+        return render_template('AdminDashboard.html',admin=admin,campaign_list=campaign_list,ad_request_list=ad_request_list)
+
+
+@main.route('/flag-campaign',methods=['POST'])
+def flag_campaign():
+    if request.method == 'POST':
+
+        campaign_id = request.form.get('campaign-id')
+
+        ad_request = Ad_requests.query.get(campaign_id)
+
+        ad_request.flag = 'true'
+
+        db.session.commit()
+
+        return redirect(url_for('main.admin_page'))
+    
+
+@main.route('/unflag-campaign',methods=['POST'])
+def unflag_campaign():
+    if request.method == 'POST':
+
+        campaign_id = request.form.get('campaign-id')
+
+        ad_request = Ad_requests.query.get(campaign_id)
+
+        ad_request.flag = ''
+
+        db.session.commit()
+
+        return redirect(url_for('main.admin_page'))
+    
+
+@main.route('/admin-find',methods=['GET','POST'])
+def admin_find():
+    if request.method == 'POST':
+
+        msg = ''
+        selected_option = request.form.get('selected-option')
+
+        item_list = []
+        campaign_list = []
+        all_campaign_list = []
+
+        if selected_option == 'sponsors':
+            item_type = 'sponsor'
+            search_term = request.form.get('search-term')
+            modify_flag = request.form.get('modify-flag')
+            modify_type = request.form.get('modify-type')
+            
+
+            if modify_flag:
+                if modify_type == 'flag':
+                    sponsor_to_be_flagged = Sponsor.query.get(request.form.get('sponsor-id'))
+
+                    sponsor_to_be_flagged.flag = 'true'
+
+                    db.session.commit()
+                    
+                elif modify_type == 'unflag':
+
+                    sponsor_to_be_flagged = Sponsor.query.get(request.form.get('sponsor-id'))
+
+                    sponsor_to_be_flagged.flag = ''
+
+                    db.session.commit()
+            
+
+            if search_term == '':
+                item_list = Sponsor.query.all()
+
+            else:
+                all_sponsor_list = Sponsor.query.all()
+
+                for sponsor in all_sponsor_list:
+                    if sponsor.campaign and sponsor.campaign[0].industry == search_term:
+                        item_list.append(sponsor)
+
+                msg = f"No sponsor found in {search_term} industry."
+
+            see_all_campaigns = request.form.get('see-all-campaigns')
+
+            if see_all_campaigns:
+                campaign_list = Campaign.query.filter_by(sponsor_id=request.form.get('sponsor-id')).all()
+
+            campaign_flag = request.form.get('campaign-flag')
+
+            if campaign_flag:
+                campaign_flag_value = request.form.get('campaign-flag-value')
+
+                if campaign_flag_value:
+                    campaign = Campaign.query.get(request.form.get('campaign-id'))
+
+                    campaign.flag = 'true'
+
+                    db.session.commit()
+
+                else:
+                    campaign = Campaign.query.get(request.form.get('campaign-id'))
+
+                    campaign.flag = ''
+
+                    db.session.commit()
+
+            return render_template('/AdminFind.html',item_list=item_list,item_type=item_type,msg=msg,search_term=search_term,selected_option=selected_option,campaign_list=campaign_list)
+
+
+        elif selected_option == 'influencers':
+            item_type = 'influencer'
+            search_term = request.form.get('search-term')
+            modify_flag = request.form.get('modify-flag')
+            modify_type = request.form.get('modify-type')
+            
+            ad_request_list = []
+
+            if modify_flag:
+                if modify_type == 'flag':
+                    influencer_to_be_flagged = Influencer.query.get(request.form.get('influencer-id'))
+                    print(influencer_to_be_flagged)
+                    influencer_to_be_flagged.flag = 'true'
+
+                    db.session.commit()
+                    
+                elif modify_type == 'unflag':
+
+                    influencer_to_be_flagged = Influencer.query.get(request.form.get('influencer-id'))
+
+                    influencer_to_be_flagged.flag = ''
+
+                    db.session.commit()
+            
+
+            if search_term == '':
+                item_list = Influencer.query.all()
+
+            else:
+                item_list = Influencer.query.filter_by(industry=search_term).all()
+
+                msg = f"No influencer found in {search_term} industry."
+
+            see_all_ad_requests = request.form.get('see-all-ad-requests')
+
+            if see_all_ad_requests:
+                ad_request_list = Ad_requests.query.filter_by(influencer_id=request.form.get('influencer-id')).all()
+
+                all_campaign_list = Campaign.query.all()
+
+            campaign_flag = request.form.get('campaign-flag')
+
+            if campaign_flag:
+                 campaign_flag_value = request.form.get('campaign-flag-value')
+
+                 if campaign_flag_value:
+                     ad_request = Ad_requests.query.get(request.form.get('ad-request-id'))
+
+                     ad_request.flag = 'true'
+
+                     db.session.commit()
+                 else:
+                     ad_request = Ad_requests.query.get(request.form.get('ad-request-id'))
+
+                     ad_request.flag = ''
+
+                     db.session.commit()
+                
+            return render_template('/AdminFind.html',item_list=item_list,item_type=item_type,msg=msg,search_term=search_term,selected_option=selected_option,ad_request_list=ad_request_list,all_campaign_list=all_campaign_list)
+
+        elif selected_option == 'campaigns':
+            item_type = 'campaign'
+            search_term = request.form.get('search-term')
+
+            if search_term == '':
+                item_list = Campaign.query.all()
+            else:
+                item_list = Campaign.query.filter_by(industry=search_term).all()
+
+            all_sponsor_list = Sponsor.query.all()
+
+            campaign_flag = request.form.get('campaign-flag')
+
+            if campaign_flag:
+                campaign_flag_value = request.form.get('campaign-flag-value')
+
+                if campaign_flag_value:
+                    campaign = Campaign.query.get(request.form.get('campaign-id'))
+
+                    campaign.flag = 'true'
+
+                    db.session.commit()
+                else:
+                    campaign = Campaign.query.get(request.form.get('campaign-id'))
+
+                    campaign.flag = ''
+
+                    db.session.commit()
+
+            
+            return render_template('/AdminFind.html',item_list=item_list,item_type=item_type,search_term=search_term,selected_option=selected_option,all_sponsor_list=all_sponsor_list)
+            
+
+
+    return render_template('AdminFind.html')
+
+@main.route('/admin-find-page',methods=['GET'])
+def admin_find_page():
+    pass
+    
 
 ############################# admin routes end ###################################
 

@@ -7,6 +7,17 @@
     display: flex;
 }
 
+.accepted-text{
+    color: green;
+}
+
 .rejected-text{
     color: #aa0000;
 }
+
+.negotiation{
+    margin-top: 3.8%;
+}
+
+
+

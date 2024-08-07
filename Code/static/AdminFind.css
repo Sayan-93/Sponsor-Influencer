@@ -1,0 +1,59 @@
+.navbar-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.cards{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.campaign-cards{
+    display: flex;
+    margin-left: 20%;
+}
+
+.search{
+    display: flex;
+    margin-top: 5%;
+    margin-left: 40%;
+    width: 20%;
+}
+
+.search-text{
+    margin-left: 1.8%;
+}
+
+.search-radio{
+    display: flex;
+    justify-content: center;
+    margin-top: 1.3%;
+}
+
+.search-radio-option{
+    margin-right: 2.5%;
+}
+
+.radio-options{
+    display: block;
+}
+
+.sponsor-options{
+    display: flex;
+    justify-content: center;
+}
+
+.empty-div{
+    margin-top: 3%;
+}
+
+.negotiation{
+    margin-right: 2%;
+}
+
+.flagged-text{
+    color: #aa0000;
+}

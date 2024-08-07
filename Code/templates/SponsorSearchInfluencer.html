@@ -68,7 +68,11 @@
                           
                           <input type="text" name="influencer_id" value="{{influencer.id}}" hidden>
                           <input type="text" name="influencer_name" value="{{influencer.name}}" hidden>
+                          {% if not sponsor.flag %}
                           <button type="submit" class="btn btn-primary">Select influencer</button>
+                          {% else %}
+                          <h5 class="card-text not-allowed-text">You are not allowed to send ad requests</h5>
+                          {% endif %}
                         </div>
                       </div>
                     </div>
